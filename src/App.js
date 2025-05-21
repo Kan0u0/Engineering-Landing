@@ -1,11 +1,12 @@
-import TodoApp from "./components/TodoApp";
+import React from 'react';
+import RestaurantLanding from './RestaurantLanding'; // Import the RestaurantLanding component
 
-const App = () => {
+function App() {
   return (
-    <div>
-      <TodoApp />
+    <div className="app">
+      <RestaurantLanding />
     </div>
   );
-};
+}
 
 export default App;
