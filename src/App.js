@@ -1,10 +1,10 @@
 import React from 'react';
-import RestaurantLanding from './RestaurantLanding'; // Import the RestaurantLanding component
+import EngineeringLanding from './EngineeringLanding'; // Import the RestaurantLanding component
 
 function App() {
   return (
     <div className="app">
-      <RestaurantLanding />
+      <EngineeringLanding />
     </div>
   );
 }
