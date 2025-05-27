@@ -6,8 +6,8 @@ import {
   Target, Hexagon, Triangle, Award, Users, MessageSquare
 } from 'lucide-react';
 
-// Optimized LazyImage component
-const LazyImage = ({ src, alt, className }) => {
+// Enhanced LazyImage component with reliable fallbacks
+const LazyImage = ({ src, alt, className, fallbackContent }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const imgRef = useRef(null);
@@ -36,15 +36,15 @@ const LazyImage = ({ src, alt, className }) => {
     <div ref={imgRef} className={`${className} overflow-hidden`}>
       {loaded ? (
         <img src={src} alt={alt} className="w-full h-full object-cover" loading="lazy" />
-      ) : error ? (
-        <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-          <div className="text-center text-gray-600">
-            <div className="text-2xl sm:text-4xl mb-2">🏗️</div>
-            <p className="text-xs sm:text-sm">Image placeholder</p>
-          </div>
-        </div>
       ) : (
-        <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse" />
+        <div className="w-full h-full bg-gradient-to-br from-amber-100 via-amber-200 to-amber-300 flex items-center justify-center">
+          {fallbackContent || (
+            <div className="text-center text-amber-800">
+              <div className="text-3xl sm:text-5xl mb-2">🔧</div>
+              <p className="text-xs sm:text-sm font-medium px-2">{alt || 'Engineering Solution'}</p>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
@@ -111,11 +111,16 @@ const ServiceCard = ({ icon: Icon, title, description }) => (
   </div>
 );
 
-const ProjectCard = ({ image, title, category, description }) => (
+const ProjectCard = ({ title, category, description, icon: Icon, gradient }) => (
   <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 group">
     <div className="relative h-40 sm:h-48 lg:h-56">
-      <LazyImage src={image} alt={title} className="w-full h-full group-hover:scale-105 transition-transform duration-500" />
-      <div className="absolute inset-0 bg-amber-900 bg-opacity-70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className={`w-full h-full ${gradient} flex items-center justify-center group-hover:scale-105 transition-transform duration-500`}>
+        <div className="text-center text-white">
+          <Icon className="mx-auto h-12 w-12 sm:h-16 sm:w-16 mb-2 sm:mb-4 opacity-80" />
+          <p className="text-xs sm:text-sm font-medium opacity-90 px-4">{title}</p>
+        </div>
+      </div>
+      <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
         <button className="bg-white text-amber-600 px-3 py-2 sm:px-4 rounded-full font-medium flex items-center text-sm sm:text-base">
           View Project <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
         </button>
@@ -151,10 +156,34 @@ const services = [
 ];
 
 const projects = [
-  { image: "/Industrial.jpeg", title: "Industrial IoT Platform", category: "IoT / Cloud", description: "Connected manufacturing equipment to improve operational efficiency by 35%." },
-  { image: "/Financial.jpeg", title: "Financial Analytics Dashboard", category: "Data / Analytics", description: "Real-time financial data visualization for a Fortune 500 company." },
-  { image: "/Smart City.jpeg", title: "Smart City Infrastructure", category: "IoT / Software", description: "Integrated transportation and utility management system for urban areas." },
-  { image: "/Ai-Powered.png", title: "AI-Powered Customer Service", category: "AI / ML", description: "Natural language processing solution that reduced support costs by 40%." }
+  { 
+    title: "Industrial IoT Platform", 
+    category: "IoT / Cloud", 
+    description: "Connected manufacturing equipment to improve operational efficiency by 35%.",
+    icon: Cpu,
+    gradient: "bg-gradient-to-br from-blue-500 to-blue-700"
+  },
+  { 
+    title: "Financial Analytics Dashboard", 
+    category: "Data / Analytics", 
+    description: "Real-time financial data visualization for a Fortune 500 company.",
+    icon: LineChart,
+    gradient: "bg-gradient-to-br from-green-500 to-green-700"
+  },
+  { 
+    title: "Smart City Infrastructure", 
+    category: "IoT / Software", 
+    description: "Integrated transportation and utility management system for urban areas.",
+    icon: Globe,
+    gradient: "bg-gradient-to-br from-purple-500 to-purple-700"
+  },
+  { 
+    title: "AI-Powered Customer Service", 
+    category: "AI / ML", 
+    description: "Natural language processing solution that reduced support costs by 40%.",
+    icon: Activity,
+    gradient: "bg-gradient-to-br from-orange-500 to-orange-700"
+  }
 ];
 
 const testimonials = [
@@ -368,13 +397,15 @@ export default function TechForgeLanding() {
               
               <div className="flex justify-center order-first lg:order-last">
                 <div className="relative w-full max-w-sm sm:max-w-md">
-                  <LazyImage 
-                    src="/Engineering.jpeg" 
-                    alt="Engineering visualization" 
-                    className="rounded-xl shadow-xl w-full h-60 sm:h-80"
-                  />
-                  <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-amber-600 text-white p-2 rounded-full animate-pulse">
-                    <Target className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <div className="rounded-xl shadow-xl w-full h-60 sm:h-80 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 flex items-center justify-center">
+                    <div className="text-center text-white">
+                      <Target className="mx-auto h-16 w-16 sm:h-20 sm:w-20 mb-4 opacity-90" />
+                      <p className="text-lg sm:text-xl font-bold opacity-95">Engineering Excellence</p>
+                      <p className="text-sm opacity-80 mt-2">Precision • Innovation • Quality</p>
+                    </div>
+                  </div>
+                  <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-amber-400 text-amber-900 p-2 rounded-full animate-pulse">
+                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                 </div>
               </div>
